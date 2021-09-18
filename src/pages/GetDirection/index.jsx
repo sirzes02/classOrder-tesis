@@ -1,20 +1,19 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Alert, StyleSheet, Text, View } from "react-native";
+import { Alert, StyleSheet, Text } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { getData, storeData, wipeDirection } from "../../functions/main";
 import MarkerHome from "../../resources/img/markerHome.png";
 import {
-  ButtonCurrentLocation,
   ButtonSave,
   ButtonsContainer,
   Container,
   ContainerAutocomplete,
-  ContainerInput,
   Input,
   Item,
   MarkerImage,
+  PinIcon,
   SaveText,
 } from "./styles";
 
@@ -62,11 +61,6 @@ const GetDirection = ({ navigation }) => {
     setNewDirection(direction);
   };
 
-  const restoreData = () => {
-    setNewDirection("");
-    fetchData();
-  };
-
   const saveNewPlace = () => {
     Alert.alert(
       "Changing location...",
@@ -92,22 +86,29 @@ const GetDirection = ({ navigation }) => {
     );
   };
 
+  const useGeocoding = async (e) => {
+    const res = await axios.get(
+      `https://nominatim.openstreetmap.org/reverse?lat=${e.latitude}&lon=${e.longitude}&format=json`
+    );
+    const data = await res.data;
+
+    setNewDirection(data.display_name);
+    setLatitude(data.lat);
+    setLongitude(data.lon);
+  };
+
   return (
     <Container>
+      <PinIcon>
+        <Ionicons name="pin-outline" size={20} />
+      </PinIcon>
       <ContainerAutocomplete>
         <Text>Insert Direction:</Text>
-        <ContainerInput>
-          <Input
-            placeholder="Insert a new direction..."
-            value={newDirection}
-            onChangeText={setNewDirection}
-          />
-          {newDirection.length > 0 && (
-            <Text onPress={restoreData}>
-              <Ionicons name="close-circle-outline" size={20} />
-            </Text>
-          )}
-        </ContainerInput>
+        <Input
+          placeholder="Insert a new direction..."
+          value={newDirection}
+          onChangeText={setNewDirection}
+        />
         {sites.map((site, key) => {
           const direction = wipeDirection(site.display_name);
 
@@ -123,6 +124,7 @@ const GetDirection = ({ navigation }) => {
         })}
       </ContainerAutocomplete>
       <MapView
+        onRegionChangeComplete={useGeocoding}
         style={styles.map}
         region={{
           latitude,
@@ -136,20 +138,9 @@ const GetDirection = ({ navigation }) => {
         </Marker>
       </MapView>
       <ButtonsContainer>
-        <ButtonCurrentLocation
-          onPress={restoreData}
-          underlayColor="rgba(73,182,77,1,0)"
-        >
-          <Ionicons name="locate-outline" size={30} />
-        </ButtonCurrentLocation>
-        {sites.length !== 0 && (
-          <ButtonSave
-            onPress={saveNewPlace}
-            underlayColor="rgba(73,182,77,1,0)"
-          >
-            <SaveText>Save direction</SaveText>
-          </ButtonSave>
-        )}
+        <ButtonSave onPress={saveNewPlace} underlayColor="rgba(73,182,77,1,0)">
+          <SaveText>Save direction</SaveText>
+        </ButtonSave>
       </ButtonsContainer>
     </Container>
   );

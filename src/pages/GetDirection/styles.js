@@ -10,7 +10,7 @@ export const Container = styled.View`
 export const MarkerImage = styled.Image`
   width: 32px;
   height: 40px;
-  margin-bottom: 10px;
+  margin-bottom: 30px;
 `;
 
 export const ContainerAutocomplete = styled.View`
@@ -69,9 +69,7 @@ export const SaveText = styled.Text`
   color: white;
 `;
 
-export const ButtonCurrentLocation = styled.TouchableHighlight`
-  background-color: white;
-  border-width: 1px;
-  border-radius: 25px;
-  padding: 0;
+export const PinIcon = styled.Text`
+  position: absolute;
+  z-index: 500;
 `;
