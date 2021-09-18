@@ -18,4 +18,13 @@ const storeData = async (key, value) => {
   }
 };
 
-export { getData, storeData };
+const wipeDirection = (dir) => {
+  return dir
+    .replace(", Colombia", "")
+    .replace(", Cali", "")
+    .replace(", Valle del Cauca", "")
+    .replace(", Sur", "")
+    .replace(", Pacífica", "");
+};
+
+export { getData, storeData, wipeDirection };

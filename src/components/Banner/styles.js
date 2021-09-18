@@ -6,8 +6,8 @@ export const Container = styled.View`
   background-color: white;
   margin: 15px 30px 0 30px;
   border-radius: 10px;
-  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 4px;
   justify-content: space-around;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 4px;
 `;
 
 export const ImageBanner = styled.Image`
