@@ -1,4 +1,10 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import {
+  Accuracy,
+  getCurrentPositionAsync,
+  requestForegroundPermissionsAsync,
+  startLocationUpdatesAsync,
+} from "expo-location";
 import React, { useEffect, useState } from "react";
 import { TouchableHighlight } from "react-native";
 import Banner from "../../components/Banner";
@@ -6,12 +12,7 @@ import Loader from "../../components/Loader";
 import { app } from "../../firebase";
 import Class from "../Class";
 import { BannerList } from "./styles";
-import {
-  requestForegroundPermissionsAsync,
-  startLocationUpdatesAsync,
-  getCurrentPositionAsync,
-  Accuracy,
-} from "expo-location";
+import { storeData } from "../../functions/main";
 
 const Home = ({ navigation }) => {
   const [loading, setLoading] = useState(true);
@@ -36,6 +37,8 @@ const Home = ({ navigation }) => {
         latitude: location.coords.latitude,
         longitude: location.coords.longitude,
       };
+
+      storeData("userData", obj);
     }
 
     if (res.exists) {

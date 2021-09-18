@@ -15,6 +15,7 @@ const RoutesHome = () => {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
+        headerShown: false,
         tabBarIcon: ({ focused, color, size }) => {
           return (
             <Ionicons
@@ -28,11 +29,7 @@ const RoutesHome = () => {
         tabBarInactiveTintColor: "gray",
       })}
     >
-      <Tab.Screen
-        name="Home"
-        component={Home}
-        options={{ headerShown: false }}
-      />
+      <Tab.Screen name="Home" component={Home} />
       <Tab.Screen name="Settings" component={Settings} />
     </Tab.Navigator>
   );
