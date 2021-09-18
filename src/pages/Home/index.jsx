@@ -1,21 +1,39 @@
-import React from "react";
-import { Text, View, TouchableHighlight } from "react-native";
+import React, { useEffect, useState } from "react";
+import { FlatList, View } from "react-native";
+import Banner from "../../components/Banner";
 import { app } from "../../firebase";
 
-// import { Container } from './styles';
-
 const Home = () => {
-  const logOut = async () => {
-    const res = app.auth().signOut();
+  const [banners, setBanners] = useState([]);
 
-    console.log(res);
-  };
+  useEffect(() => {
+    const subscriber = app
+      .firestore()
+      .collection("classes")
+      .onSnapshot((querySnapshot) => {
+        const banners = [];
+
+        querySnapshot.forEach((documentSnapshot) =>
+          banners.push({
+            ...documentSnapshot.data(),
+            key: documentSnapshot.id,
+          })
+        );
+
+        setBanners(banners);
+      });
+
+    return () => subscriber();
+  }, []);
 
   return (
     <View>
-      <TouchableHighlight style={{ marginTop: 200 }} onPress={logOut}>
-        <Text>HOLA</Text>
-      </TouchableHighlight>
+      <FlatList
+        data={banners}
+        renderItem={({ item }) => (
+          <Banner img={item.imgRoute} name={item.name} />
+        )}
+      />
     </View>
   );
 };

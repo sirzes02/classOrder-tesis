@@ -3,9 +3,9 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { StatusBar } from "expo-status-bar";
 import React, { useEffect, useState } from "react";
 import { app } from "./src/firebase";
-import Home from "./src/pages/Home";
 import Login from "./src/pages/Login";
 import Register from "./src/pages/Register";
+import RoutesHome from "./src/routes/RoutesHome";
 
 const App = () => {
   const Stack = createNativeStackNavigator();
@@ -48,8 +48,8 @@ const App = () => {
       <Stack.Navigator>
         <Stack.Screen
           options={{ headerShown: false }}
-          name="Home"
-          component={Home}
+          name="HomeRoutes"
+          component={RoutesHome}
         />
       </Stack.Navigator>
       <StatusBar />

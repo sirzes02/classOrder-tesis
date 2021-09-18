@@ -21,10 +21,10 @@ const Register = () => {
       if (password === passwordVerification) {
         await app.auth().createUserWithEmailAndPassword(email, password);
       } else {
-        throw "Las contraseñas no coinciden";
+        Alert.alert("Las contraseñas no coinciden");
       }
     } catch (e) {
-      Alert.alert(e);
+      Alert.alert("We have trouble creating you, try again...");
 
       setPassword("");
       setPasswordVerification("");
@@ -39,31 +39,31 @@ const Register = () => {
           <Input
             value={email}
             onChangeText={setEmail}
-            placeholder="Ingrese correo"
+            placeholder="Insert email"
             textContentType="emailAddress"
             keyboardType="email-address"
           />
         </ContainerForm>
         <ContainerForm>
-          <Label>Contraseña</Label>
+          <Label>Password</Label>
           <Input
             value={password}
             onChangeText={setPassword}
-            placeholder="Ingrese contraseña"
+            placeholder="Insert password"
             secureTextEntry={true}
           />
         </ContainerForm>
         <ContainerForm>
-          <Label>Verificar contraseña</Label>
+          <Label>Verify password</Label>
           <Input
             value={passwordVerification}
             onChangeText={setPasswordVerification}
-            placeholder="Ingrese verifiación"
+            placeholder="Insert password verificator"
             secureTextEntry={true}
           />
         </ContainerForm>
         <ButtonLogin onPress={register}>
-          <TextButton>Registrarse</TextButton>
+          <TextButton>Sign In</TextButton>
         </ButtonLogin>
       </ContainerInputs>
     </Container>
