@@ -6,12 +6,48 @@ import Loader from "../../components/Loader";
 import { app } from "../../firebase";
 import Class from "../Class";
 import { BannerList } from "./styles";
+import {
+  requestForegroundPermissionsAsync,
+  startLocationUpdatesAsync,
+  getCurrentPositionAsync,
+  Accuracy,
+} from "expo-location";
 
 const Home = ({ navigation }) => {
   const [loading, setLoading] = useState(true);
   const [banners, setBanners] = useState([]);
 
+  const getUserData = async () => {
+    const { uid, email } = app.auth().currentUser;
+    const docRef = app.firestore().collection("Users").doc(uid);
+    const res = await docRef.get();
+    const today = Date.now();
+    const { status } = await requestForegroundPermissionsAsync();
+    let obj = { lastLoginDate: today, latitude: 0, longitude: 0 };
+
+    if (status === "granted") {
+      await startLocationUpdatesAsync("background-location-task", {
+        accuracy: Accuracy.Balanced,
+      });
+      let location = await getCurrentPositionAsync({});
+
+      obj = {
+        ...obj,
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+      };
+    }
+
+    if (res.exists) {
+      docRef.update(obj);
+    } else {
+      docRef.set({ ...obj, displayName: email, accountCreatedDate: today });
+    }
+  };
+
   useEffect(() => {
+    getUserData();
+
     const subscriber = app
       .firestore()
       .collection("classes")
