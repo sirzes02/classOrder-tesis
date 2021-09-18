@@ -1,9 +1,14 @@
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import React, { useEffect, useState } from "react";
-import { FlatList, View } from "react-native";
+import { TouchableHighlight } from "react-native";
 import Banner from "../../components/Banner";
+import Loader from "../../components/Loader";
 import { app } from "../../firebase";
+import Class from "../Class";
+import { BannerList } from "./styles";
 
-const Home = () => {
+const Home = ({ navigation }) => {
+  const [loading, setLoading] = useState(true);
   const [banners, setBanners] = useState([]);
 
   useEffect(() => {
@@ -21,20 +26,52 @@ const Home = () => {
         );
 
         setBanners(banners);
+        setLoading(false);
       });
 
     return () => subscriber();
   }, []);
 
+  const redirectTo = (className) => navigation.push(className);
+
+  if (loading) {
+    return <Loader />;
+  }
+
+  const Stack = createNativeStackNavigator();
+
   return (
-    <View>
-      <FlatList
-        data={banners}
-        renderItem={({ item }) => (
-          <Banner img={item.imgRoute} name={item.name} />
+    <Stack.Navigator>
+      <Stack.Screen name="Conf" options={{ title: "Home" }}>
+        {(props) => (
+          <BannerList
+            {...props}
+            data={banners}
+            renderItem={({ item }) => {
+              const { name, imgRoute } = item;
+
+              return (
+                <TouchableHighlight
+                  onPress={() => redirectTo(name)}
+                  underlayColor="rgba(73,182,77,1,0)"
+                >
+                  <Banner img={imgRoute} name={name} />
+                </TouchableHighlight>
+              );
+            }}
+          />
         )}
-      />
-    </View>
+      </Stack.Screen>
+      {banners.map((banner, id) => {
+        const { name } = banner;
+
+        return (
+          <Stack.Screen name={name} key={id}>
+            {(props) => <Class {...props} classBanner={banner} />}
+          </Stack.Screen>
+        );
+      })}
+    </Stack.Navigator>
   );
 };
 
