@@ -1,10 +1,20 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import React from "react";
+import React, { useState } from "react";
 import { Alert, Text, TouchableHighlight } from "react-native";
-import GetDirection from "../GetDirection";
 import { app } from "../../firebase";
+import Place from "../../resources/img/profilePlaceholder.png";
+import GetDirection from "../GetDirection";
+import {
+  Container,
+  ImageProfile,
+  ItemOption,
+  Separator,
+  TextEmail,
+} from "./styles";
 
 const Settings = ({ navigation }) => {
+  const user = useState(app.auth().currentUser);
+
   const logOut = async () => {
     try {
       const res = await app.auth().signOut();
@@ -22,14 +32,20 @@ const Settings = ({ navigation }) => {
     <Stack.Navigator>
       <Stack.Screen name="Test" options={{ title: "Settings" }}>
         {() => (
-          <>
-            <TouchableHighlight onPress={() => redirectTo("GetDirection")}>
+          <Container>
+            <ImageProfile source={Place} />
+            <TextEmail>{user.email}</TextEmail>
+            <Separator />
+            <ItemOption
+              onPress={() => redirectTo("GetDirection")}
+              underlayColor="rgba(73,182,77,1,0)"
+            >
               <Text>Mapa</Text>
-            </TouchableHighlight>
+            </ItemOption>
             <TouchableHighlight onPress={logOut}>
               <Text>Cerrar sesion</Text>
             </TouchableHighlight>
-          </>
+          </Container>
         )}
       </Stack.Screen>
       <Stack.Screen

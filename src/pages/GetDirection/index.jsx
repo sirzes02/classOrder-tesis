@@ -93,8 +93,8 @@ const GetDirection = ({ navigation }) => {
     const data = await res.data;
 
     setNewDirection(data.display_name);
-    setLatitude(data.lat);
-    setLongitude(data.lon);
+    setLatitude(parseFloat(data.lat));
+    setLongitude(parseFloat(data.lon));
   };
 
   return (

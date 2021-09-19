@@ -9,20 +9,27 @@ import {
   TextButton,
   TextRegistro,
   TextLink,
+  LoaderContainer,
 } from "./styles";
 import { app } from "../../firebase";
-import { Alert } from "react-native";
+import { Alert, TouchableHighlight } from "react-native";
+import Loader from "../../components/Loader";
 
 const Login = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const login = async () => {
+    setIsLoading(true);
+
     try {
       const res = await app.auth().signInWithEmailAndPassword(email, password);
     } catch (e) {
       Alert.alert("We have trouble finding you, try again...");
       setPassword("");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -50,14 +57,29 @@ const Login = ({ navigation }) => {
             secureTextEntry={true}
           />
         </ContainerForm>
-        <ButtonLogin onPress={login}>
+        <ButtonLogin
+          onPress={login}
+          underlayColor="rgba(73,182,77,1,0)"
+          disabled={isLoading}
+        >
           <TextButton>Log In</TextButton>
         </ButtonLogin>
         <TextRegistro>
           Don't you have an account? -
-          <TextLink onPress={goToRegister}>Sign In</TextLink>
+          <TouchableHighlight
+            disabled={isLoading}
+            onPress={goToRegister}
+            underlayColor="rgba(73,182,77,1,0)"
+          >
+            <TextLink>{` Sign In`}</TextLink>
+          </TouchableHighlight>
         </TextRegistro>
       </ContainerInputs>
+      {isLoading && (
+        <LoaderContainer>
+          <Loader />
+        </LoaderContainer>
+      )}
     </Container>
   );
 };

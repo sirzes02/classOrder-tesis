@@ -56,3 +56,11 @@ export const TextLink = styled.Text`
   font-style: italic;
   color: blueviolet;
 `;
+
+export const LoaderContainer = styled.View`
+  position: absolute;
+  background-color: white;
+  padding: 10%;
+  border-width: 1px;
+  border-radius: 7px;
+`;

@@ -15,8 +15,11 @@ const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordVerification, setPasswordVerification] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const register = async () => {
+    setIsLoading(true);
+
     try {
       if (password === passwordVerification) {
         await app.auth().createUserWithEmailAndPassword(email, password);
@@ -28,6 +31,8 @@ const Register = () => {
 
       setPassword("");
       setPasswordVerification("");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -62,10 +67,19 @@ const Register = () => {
             secureTextEntry={true}
           />
         </ContainerForm>
-        <ButtonLogin onPress={register}>
+        <ButtonLogin
+          onPress={register}
+          underlayColor="rgba(73,182,77,1,0)"
+          disabled={isLoading}
+        >
           <TextButton>Sign In</TextButton>
         </ButtonLogin>
       </ContainerInputs>
+      {isLoading && (
+        <LoaderContainer>
+          <Loader />
+        </LoaderContainer>
+      )}
     </Container>
   );
 };
