@@ -106,7 +106,7 @@ const Home = ({ navigation }) => {
 
         return (
           <Stack.Screen name={name} key={id}>
-            {(props) => <Class {...props} classBanner={banner} />}
+            {(props) => <Class {...props} />}
           </Stack.Screen>
         );
       })}
