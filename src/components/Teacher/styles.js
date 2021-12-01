@@ -12,13 +12,13 @@ export const Container = styled.View`
 `;
 
 export const Photo = styled.Image`
-  width: 130px;
-  height: 130px;
+  width: 120px;
+  height: 120px;
 `;
 
 export const BodyContainer = styled.View`
   flex: 1;
-  margin-right: 20px;
+  margin: 0 20px 10px;
 `;
 
 export const Name = styled.Text`

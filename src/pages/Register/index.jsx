@@ -12,6 +12,7 @@ import { app } from "../../firebase";
 import { Alert } from "react-native";
 
 const Register = () => {
+  const [teacher, setTeacher] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordVerification, setPasswordVerification] = useState("");

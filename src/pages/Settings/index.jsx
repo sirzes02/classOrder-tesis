@@ -2,7 +2,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import React, { useState } from "react";
 import { Alert, Text, TouchableHighlight } from "react-native";
 import { app } from "../../firebase";
-import Place from "../../resources/img/profilePlaceholder.png";
+import { getImage } from "../../functions/main";
 import GetDirection from "../GetDirection";
 import {
   Container,
@@ -32,8 +32,8 @@ const Settings = ({ navigation }) => {
     <Stack.Navigator>
       <Stack.Screen name="Test" options={{ title: "Settings" }}>
         {() => (
-          <Container>
-            <ImageProfile source={Place} />
+          <Container style={{ paddingTop: 10 }}>
+            <ImageProfile source={getImage()} />
             <TextEmail>{user.email}</TextEmail>
             <Separator />
             <ItemOption
