@@ -7,6 +7,7 @@ import {
   ContainerForm,
   ButtonLogin,
   TextButton,
+  LoaderContainer,
 } from "./styles";
 import { app } from "../../firebase";
 import { Alert } from "react-native";
