@@ -1,10 +1,8 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Alert, StyleSheet, Text } from "react-native";
-import MapView, { Marker } from "react-native-maps";
-import Ionicons from "react-native-vector-icons/Ionicons";
+import { Alert, StyleSheet, Text, View } from "react-native";
+import MapView, { Callout, Marker } from "react-native-maps";
 import { getData, storeData, wipeDirection } from "../../functions/main";
-import MarkerHome from "../../resources/img/markerHome.png";
 import {
   ButtonSave,
   ButtonsContainer,
@@ -12,12 +10,12 @@ import {
   ContainerAutocomplete,
   Input,
   Item,
-  MarkerImage,
-  PinIcon,
   SaveText,
 } from "./styles";
+import { app } from "../../firebase";
 
 const GetDirection = ({ navigation }) => {
+  const [professorsList, setProfessorsList] = useState([]);
   const [latitude, setLatitude] = useState(3.479388);
   const [longitude, setLongitude] = useState(-76.500304);
   const [newDirection, setNewDirection] = useState("");
@@ -51,6 +49,23 @@ const GetDirection = ({ navigation }) => {
 
     setLatitude(latitude);
     setLongitude(longitude);
+
+    app
+      .firestore()
+      .collection("professors")
+      .onSnapshot((querySnapshot) => {
+        const professors = [];
+
+        querySnapshot.forEach((documentSnapshot) =>
+          professors.push({
+            ...documentSnapshot.data(),
+            key: documentSnapshot.id,
+          })
+        );
+
+        setProfessorsList(professors);
+        console.log(professors);
+      });
   };
 
   const setNewPlace = (site, direction) => {
@@ -86,9 +101,9 @@ const GetDirection = ({ navigation }) => {
     );
   };
 
-  const useGeocoding = async (e) => {
+  const useGeocoding = async (latitude, longitude) => {
     const res = await axios.get(
-      `https://nominatim.openstreetmap.org/reverse?lat=${e.latitude}&lon=${e.longitude}&format=json`
+      `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`
     );
     const data = await res.data;
 
@@ -99,9 +114,6 @@ const GetDirection = ({ navigation }) => {
 
   return (
     <Container>
-      <PinIcon>
-        <Ionicons name="pin-outline" size={20} />
-      </PinIcon>
       <ContainerAutocomplete>
         <Text>Insert Direction:</Text>
         <Input
@@ -124,18 +136,43 @@ const GetDirection = ({ navigation }) => {
         })}
       </ContainerAutocomplete>
       <MapView
-        onRegionChangeComplete={useGeocoding}
         style={styles.map}
         region={{
           latitude,
           longitude,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
+          latitudeDelta: 0.0522,
+          longitudeDelta: 0.0221,
         }}
+        showsUserLocation
+        showsScale
+        showsMyLocationButton
+        showsCompass
+        followsUserLocation
       >
-        <Marker coordinate={{ latitude, longitude }}>
-          <MarkerImage source={MarkerHome} />
-        </Marker>
+        <Marker
+          style={{ width: 20, height: 20 }}
+          draggable
+          coordinate={{ latitude, longitude }}
+          onDragEnd={(e) =>
+            useGeocoding(
+              e.nativeEvent.coordinate.latitude,
+              e.nativeEvent.coordinate.longitude
+            )
+          }
+        />
+        {professorsList.map((item) => (
+          <Marker
+            pinColor="blue"
+            style={{ width: 20, height: 20, backgroundColor: "blue" }}
+            coordinate={{ latitude: item.latitude, longitude: item.longitude }}
+          >
+            <Callout>
+              <View style={{ width: 120 }}>
+                <Text>{item.name}</Text>
+              </View>
+            </Callout>
+          </Marker>
+        ))}
       </MapView>
       <ButtonsContainer>
         <ButtonSave onPress={saveNewPlace} underlayColor="rgba(73,182,77,1,0)">

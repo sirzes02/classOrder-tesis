@@ -1,5 +1,5 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import React, { useState } from "react";
+import React from "react";
 import { Alert, Text, TouchableHighlight } from "react-native";
 import { app } from "../../firebase";
 import { getImage } from "../../functions/main";
@@ -13,8 +13,6 @@ import {
 } from "./styles";
 
 const Settings = ({ navigation }) => {
-  const user = useState(app.auth().currentUser);
-
   const logOut = async () => {
     try {
       const res = await app.auth().signOut();
@@ -34,7 +32,7 @@ const Settings = ({ navigation }) => {
         {() => (
           <Container style={{ paddingTop: 10 }}>
             <ImageProfile source={getImage()} />
-            <TextEmail>{user.email}</TextEmail>
+            <TextEmail>{app.auth().currentUser.email}</TextEmail>
             <Separator />
             <ItemOption
               onPress={() => redirectTo("GetDirection")}

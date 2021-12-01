@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Container, Text, BannerContainer } from "./styles";
-import { teachers } from "../../mocks/teachers";
 import Teacher from "../../components/Teacher";
 import { ScrollView, StyleSheet } from "react-native";
 import { app } from "../../firebase";
